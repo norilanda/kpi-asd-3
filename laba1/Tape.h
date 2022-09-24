@@ -17,7 +17,7 @@ private:
 public:
 	/* Constructors/Destructors */
 	Tape();
-	~Tape();
+	/*~Tape();*/
 
 	/* getters/setters */
 	string getName() { return fileName; }
@@ -28,4 +28,10 @@ public:
 	static int TapeNumber;
 	bool eof();
 	void destroy();	//for deleting the fileObject
+	void Reset();	//set the current position at the start of the file
+	void StartRead();
+	void StartWrite();
+	//void copy();	//copies current Tape 
+	//void copyrun();
+	void Close();	//closes fileObject
 };

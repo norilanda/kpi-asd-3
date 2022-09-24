@@ -10,10 +10,10 @@ Tape::Tape() {
 	dummyRunNumber = 0;
 	fileObject = fstream(fileName, ios::out | ios::binary);
 }
-Tape::~Tape()
-{
-	this->destroy();
-}
+//Tape::~Tape()
+//{
+//	this->destroy();
+//}
 
 bool Tape::eof()
 {
@@ -24,4 +24,25 @@ void Tape::destroy()
 {
 	fileObject.close();
 	remove(fileName.c_str());
+}
+
+void Tape::Reset()
+{
+	fileObject.seekg(0, ios::beg);
+	fileObject.seekp(0, ios::beg);
+}
+
+void Tape::StartRead()
+{
+	this->Reset();
+	///
+}
+void Tape::StartWrite()
+{
+	this->Reset();
+}
+
+void Tape::Close()
+{
+	fileObject.close();
 }

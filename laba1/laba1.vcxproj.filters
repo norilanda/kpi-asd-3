@@ -21,12 +21,21 @@
     <ClCompile Include="Tape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PolyphaseMerge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileGenerating.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PolyphaseMerge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileGenerating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

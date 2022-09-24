@@ -127,10 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileGenerating.cpp" />
     <ClCompile Include="laba1.cpp" />
+    <ClCompile Include="PolyphaseMerge.cpp" />
     <ClCompile Include="Tape.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileGenerating.h" />
     <ClInclude Include="PolyphaseMerge.h" />
     <ClInclude Include="Tape.h" />
   </ItemGroup>
