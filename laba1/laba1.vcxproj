@@ -128,6 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="laba1.cpp" />
+    <ClCompile Include="Tape.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PolyphaseMerge.h" />
+    <ClInclude Include="Tape.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
