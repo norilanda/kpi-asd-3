@@ -11,5 +11,6 @@ int Tape::TapeNumber = 0;
 int main()
 {
     string outFilePath = "files\\unsortedFile.txt";
-    calculate_runs_distribution(4, 40);
+    PolyphaseMerge ppm(4);
+    ppm.Distribute(80);
 }

@@ -24,6 +24,14 @@ public:
 	int getRunNumber() { return runNumber; }
 	int getDummyRunNumber() { return dummyRunNumber; }
 
+	void setRunNumber(int value) { runNumber = value; }
+	void setDummyRunNumber(int value) { dummyRunNumber = value; }
+
+	void increaseRunNumber() { runNumber++; }
+	void decreaseRunNumber() { runNumber--; }
+	void increaseDummyRunNumber() { dummyRunNumber++; }
+	void decreaseDummyRunNumber() { dummyRunNumber--; }
+
 	/* functions */
 	static int TapeNumber;
 	bool eof();

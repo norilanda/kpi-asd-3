@@ -2,7 +2,7 @@
 #include <iostream>
 using std::cout;
 
-vector<int> calculate_runs_distribution(int tapeNumbers, int runsNumber)
+vector<int> calculate_runs_distribution(int tapeNumbers, int runsNumber, int& level)
 {
 	vector<int>distribution_numbers;
 	distribution_numbers.resize(tapeNumbers - 1);
@@ -19,12 +19,13 @@ vector<int> calculate_runs_distribution(int tapeNumbers, int runsNumber)
 		}
 		fibonacciNumbers.push_back(nextNumber);
 		i++;
+		level++;
 	}
 	int k = 0;
 	for (int j = 0; j <= exponent; j++)
 	{
 		distribution_numbers[k] = fibonacciNumbers[i - 1 - j];
-		cout << distribution_numbers[k] << " ";
+		/*cout << distribution_numbers[k] << " ";*/
 		k++;
 	}
 	return distribution_numbers;

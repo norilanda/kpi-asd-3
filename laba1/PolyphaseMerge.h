@@ -18,5 +18,6 @@ public:
 	PolyphaseMerge(int TapesNumber);
 	/*~PolyphaseMerge();*/
 
-	void Polyphase();	//
+	void Distribute(int runsNumber);	//distributes the runs between the series, is based on fibonacci numbers
+	void Polyphase();	//for merging the sorted runs
 };
