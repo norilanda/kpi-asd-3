@@ -13,4 +13,6 @@ int main()
     string outFilePath = "files\\unsortedFile.txt";
     PolyphaseMerge ppm(4);
     ppm.Distribute(80);
+    ppm.createRuns(outFilePath);
+    ppm.deleteTempFiles();
 }

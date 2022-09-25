@@ -1,5 +1,6 @@
 #pragma once
 #include "Tape.h"
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -20,4 +21,6 @@ public:
 
 	void Distribute(int runsNumber);	//distributes the runs between the series, is based on fibonacci numbers
 	void Polyphase();	//for merging the sorted runs
+	void createRuns(string filePath);	//divides initial file into runs and sorts every of them
+	void deleteTempFiles();	//delets all temp files
 };

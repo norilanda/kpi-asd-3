@@ -17,6 +17,7 @@ private:
 public:
 	/* Constructors/Destructors */
 	Tape();
+	Tape(string filePath);
 	/*~Tape();*/
 
 	/* getters/setters */

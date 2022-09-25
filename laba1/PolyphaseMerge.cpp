@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PolyphaseMerge::PolyphaseMerge(int TapesNumber) : N(TapesNumber)
+PolyphaseMerge::PolyphaseMerge(int TapesNumber) : N(TapesNumber)	//Constructor
 {
 	Tapes.resize(N);
 	TapesIndexArray.resize(N);
@@ -67,4 +67,18 @@ void PolyphaseMerge::Distribute(int runNumber)
 	{
 		cout << "Real: " << Tapes[i].getRunNumber() << " Dummy: " << Tapes[i].getDummyRunNumber() << " Total: " << Tapes[i].getRunNumber() + Tapes[i].getDummyRunNumber() << "\n";
 	}*/
+}
+
+void PolyphaseMerge::createRuns(string filePath)
+{
+	Tapes[N-1].destroy();
+	Tapes[N-1] = Tape(filePath);
+}
+
+void PolyphaseMerge::deleteTempFiles()
+{
+	for (int i = 0; i < N - 1; i++)
+	{
+		Tapes[i].destroy();
+	}
 }

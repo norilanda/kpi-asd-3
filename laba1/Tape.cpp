@@ -2,10 +2,19 @@
 #include <string>
 #include <fstream>
 
+using std::string;
 
 Tape::Tape() {
 	TapeNumber++;
 	fileName = "Tape" + to_string(TapeNumber) + ".txt";
+	runNumber = 0;
+	dummyRunNumber = 0;
+	fileObject = fstream(fileName, ios::out | ios::binary);
+}
+Tape::Tape(string filePath)
+{
+	TapeNumber++;
+	fileName = filePath;
 	runNumber = 0;
 	dummyRunNumber = 0;
 	fileObject = fstream(fileName, ios::out | ios::binary);
