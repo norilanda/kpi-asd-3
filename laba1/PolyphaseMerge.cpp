@@ -12,8 +12,8 @@ PolyphaseMerge::PolyphaseMerge(int TapesNumber) : N(TapesNumber)	//Constructor
 {
 	Tapes.resize(N);
 	TapesIndexArray.resize(N);
-	for (int i = 0; i < N; i++) { TapesIndexArray[i] = i + 1; }
-	
+	for (int i = 0; i < N; i++) { TapesIndexArray[i] = i; }
+	level = 0;
 }
 //PolyphaseMerge::~PolyphaseMerge()
 //{
@@ -28,17 +28,54 @@ void PolyphaseMerge::Polyphase()
 	for (int i = 0; i < N-1; i++) {
 		Tapes[i].Reset();
 	}
-	int level = 3;//!!!!!FINISH
 	while (level != 0)
 	{
-		int currRuns = Tapes[N - 1].runNumber;
-		Tapes[N].StartWrite();
+		int currRuns = Tapes[TapesIndexArray[N - 1]].totalRunNumber;//?
+		Tapes[TapesIndexArray[N-1]].StartWrite();
+		while (currRuns != 0)
+		{
+			//int k = 0;
+			for (int i = 0; i < N - 1; i++)
+			{
+				if (Tapes[TapesIndexArray[i]].dummyRunNumber > 0)
+					Tapes[TapesIndexArray[i]].dummyRunNumber--;	//use dummy run for merging
+				else
+				{
+					ActualRunsIndexArray.push_back(TapesIndexArray[i]);
+					//k++;
+				}
+			}
+			if (!ActualRunsIndexArray.size())
+				Tapes[TapesIndexArray[N - 1]].dummyRunNumber++;	//merge dummy runs
+			else
+			{
+				//mergeing
+				while (ActualRunsIndexArray.size() != 0)
+				{			
+					vector <int> numbers;
+					numbers.resize(ActualRunsIndexArray.size());
+					for(int i=0;i< ActualRunsIndexArray.size(); i++)
+						Tapes[ActualRunsIndexArray[i]].ReadANumber(numbers[i]);
+					int min = numbers[0];
+					int minTapeIndex = 0;
+					for (int i = 1; i < numbers.size(); i++)
+					{
+						if (numbers[i] < min)
+						{
+							min = numbers[i];
+							minTapeIndex = i;
+						}
+					}
+					Tapes[TapesIndexArray[N - 1]].WriteANumber(min);
+					//якщо кінець рядка - видалити тейп з TapesIndexArray та numbers. Інакше - зчитати у numbers[minTapeIndex] нове число. Переробити цикл вайл
+				}
+			}
+		}
 	}
 }
 
 void PolyphaseMerge::DistributeRunNumber(int runNumber)
 {
-	int level = 1;//?
 	vector <int> fibonacciNumbers = calculate_runs_distribution(N, runNumber, level);
 	int perfectRunNumber = 0;
 	for (int i = 0; i < fibonacciNumbers.size(); i++)
@@ -47,7 +84,7 @@ void PolyphaseMerge::DistributeRunNumber(int runNumber)
 	for (int i = 0; i < N - 1; i++)
 	{
 		Tapes[i].runNumber = fibonacciNumbers[i];	//setting runs for tapes
-		/*cout << Tapes[i].getRunNumber() << " ";*/
+		Tapes[i].totalRunNumber = fibonacciNumbers[i];
 	}
 	int i = emptyRunNumbers;
 	while (i > 0)	//distribute dummy runs evenly between the tapes
@@ -64,23 +101,22 @@ void PolyphaseMerge::DistributeRunNumber(int runNumber)
 			j++;
 		}
 	}
-	/*cout << "\n";
+	cout << "\n";
 	for (int i = 0; i < N - 1; i++)
 	{
 		cout << "Real: " << Tapes[i].runNumber << " Dummy: " << Tapes[i].dummyRunNumber << " Total: " << Tapes[i].runNumber + Tapes[i].dummyRunNumber << "\n";
-	}*/
+	}
 }
 void PolyphaseMerge::InitialDistribution()
 {
 	Tapes[N - 1].StartRead();
-	//Tapes[N - 1].fileObject.seekg(0, ios::beg);
 	int currRun = 0;
 	long long int firstPos = 0;
-	for (int i = 0; i < Tapes[N - 1].endOfRuns.size(); i++)
-		cout << Tapes[N - 1].endOfRuns[i] << " ";
+	/*for (int i = 0; i < Tapes[N - 1].endOfRuns.size(); i++)
+		cout << Tapes[N - 1].endOfRuns[i] << " ";*/
 	for (int i = 0; i < N - 1; i++)
 	{
-		cout << "rn" << Tapes[i].runNumber << "\n";
+		/*cout << "rn" << Tapes[i].runNumber << "\n";*/
 		for (int j = 0; j < Tapes[i].runNumber; j++)
 		{
 			long long int lastPos = Tapes[N - 1].endOfRuns[currRun];
@@ -92,12 +128,9 @@ void PolyphaseMerge::InitialDistribution()
 			Tapes[N - 1].ReadToBuff(buff, numberOfNumbers);//doesnt read
 			
 			Tapes[i].WriteFromBuff(buff, numberOfNumbers);
-			cout << "f" << buff[0] << " l" << buff[numberOfNumbers - 1]<<"\n";
 		}
 		Tapes[i].fileObject.flush();
 		Tapes[i].StartRead();
-		/*dispaly_file(Tapes[i].fileObject);
-		cout << " end\n\n";*/
 	}
 }
 

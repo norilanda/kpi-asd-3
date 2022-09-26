@@ -71,31 +71,31 @@ void display_file_numbers_from_range(string fileName, int startNumber, int lastN
 	inFile.close();
 }
 
-void dispaly_file(fstream& fileObject)
-{
-	fileObject.seekg(0, ios::beg);
-	int buffSize = 100;
-	vector <int> buff;
-	buff.resize(buffSize);
-	const int maxNumbersInOneRow = 30;
-	int numbersInOneRow = 0;
-	while (!fileObject.eof())
-	{
-		int j = 0;
-		while (j < buffSize && !fileObject.eof())
-		{
-			fileObject.read((char*)&buff[j], sizeof(int));
-			j++;
-		}
-		for (int k = 0; k < j; k++)
-		{
-			if (numbersInOneRow >= maxNumbersInOneRow)
-			{
-				cout << "\n";
-				numbersInOneRow = 0;
-			}
-			cout << setw(4) << buff[k] << " ";
-			numbersInOneRow++;
-		}
-	}
-}
+//void dispaly_file(fstream& fileObject)
+//{
+//	fileObject.seekg(0, ios::beg);
+//	int buffSize = 100;
+//	vector <int> buff;
+//	buff.resize(buffSize);
+//	const int maxNumbersInOneRow = 30;
+//	int numbersInOneRow = 0;
+//	while (!fileObject.eof())
+//	{
+//		int j = 0;
+//		while (j < buffSize && !fileObject.eof())
+//		{
+//			fileObject.read((char*)&buff[j], sizeof(int));
+//			j++;
+//		}
+//		for (int k = 0; k < j; k++)
+//		{
+//			if (numbersInOneRow >= maxNumbersInOneRow)
+//			{
+//				cout << "\n";
+//				numbersInOneRow = 0;
+//			}
+//			cout << setw(4) << buff[k] << " ";
+//			numbersInOneRow++;
+//		}
+//	}
+//}

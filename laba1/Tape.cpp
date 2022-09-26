@@ -9,6 +9,7 @@ Tape::Tape() {
 	fileName = "Tape" + to_string(TapeNumber) + ".txt";
 	runNumber = 0;
 	dummyRunNumber = 0;
+	totalRunNumber = 0;
 	fileObject = fstream(fileName, ios::out | ios::binary);
 }
 Tape::Tape(string filePath)
@@ -17,6 +18,7 @@ Tape::Tape(string filePath)
 	fileName = filePath;
 	runNumber = 0;
 	dummyRunNumber = 0;
+	totalRunNumber = 0;
 	fileObject = fstream(fileName, ios::in | ios::binary);	//for source file (important to save its content)
 }
 //Tape::~Tape()
@@ -27,6 +29,16 @@ Tape::Tape(string filePath)
 bool Tape::eof()
 {
 	return fileObject.eof();
+}
+bool Tape::eor()
+{
+	for (int i = 0; i < endOfRuns.size(); i++)
+	{
+		if (endOfRuns[i] == long long int(fileObject.tellg()) + 1)
+			return true;
+		if (endOfRuns[i] > long long int(fileObject.tellg()) + 1)
+			break;
+	}
 }
 
 void Tape::destroy()
@@ -50,13 +62,23 @@ void Tape::StartRead()
 }
 void Tape::StartWrite()
 {
-	this->Reset();
+	fileObject.close();
+	fileObject.open(this->fileName, ios::out | ios::trunc | ios::binary);
+	this->dummyRunNumber = 0;
+	this->runNumber = 0;
+	this->totalRunNumber = 0;
+	this->endOfRuns.clear();
 }
 
 void Tape::ReadANumber(int& number)
 {
 	fileObject.read((char*)&number, sizeof(int));
 }
+void Tape::WriteANumber(int& number)
+{
+	fileObject.write((char*)&number, sizeof(int));
+}
+
 void Tape::ReadToBuff(int* buff, int buffSize)
 {
 	fileObject.read((char*)buff, buffSize*sizeof(int));

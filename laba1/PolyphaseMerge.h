@@ -15,6 +15,8 @@ private:
 	const int N;	//number of Tapes
 	vector <Tape> Tapes;	//files
 	vector <int> TapesIndexArray;	//stores indices for swapping input/output Tapes
+	vector<int> ActualRunsIndexArray;	//stores indices of tapes with real runs that will be merged
+	int level;
 public:
 	/*	Constructors/Destructors */
 	PolyphaseMerge(int TapesNumber);

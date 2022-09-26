@@ -13,6 +13,7 @@ private:
 	string fileName;
 	int runNumber;
 	int dummyRunNumber;
+	int totalRunNumber;
 	fstream fileObject;
 	vector <long long int> endOfRuns;
 
@@ -27,11 +28,14 @@ public:
 	/* functions */
 	static int TapeNumber;
 	bool eof();
+	bool eor(); //check the end of run
 	void destroy();	//for deleting the fileObject
 	void Reset();	//set the current position at the start of the file
 	void StartRead();
 	void StartWrite();
 	void ReadANumber(int& number);	//
+	void WriteANumber(int& number);
+	void calculate_total_runs() { totalRunNumber = runNumber + dummyRunNumber; }
 
 	/*	reading/writing with buffer	*/
 	void ReadToBuff(int* buff, int buffSize);
