@@ -2,8 +2,10 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include "PolyphaseMerge.h"
 
 using namespace std;
+class PolyphaseMerge;
 
 class Tape 
 {
@@ -12,26 +14,15 @@ private:
 	int runNumber;
 	int dummyRunNumber;
 	fstream fileObject;
-	vector <int> endOfRuns;
+	vector <long long int> endOfRuns;
 
 public:
+	friend class PolyphaseMerge;
+
 	/* Constructors/Destructors */
 	Tape();
 	Tape(string filePath);
 	/*~Tape();*/
-
-	/* getters/setters */
-	string getName() { return fileName; }
-	int getRunNumber() { return runNumber; }
-	int getDummyRunNumber() { return dummyRunNumber; }
-
-	void setRunNumber(int value) { runNumber = value; }
-	void setDummyRunNumber(int value) { dummyRunNumber = value; }
-
-	void increaseRunNumber() { runNumber++; }
-	void decreaseRunNumber() { runNumber--; }
-	void increaseDummyRunNumber() { dummyRunNumber++; }
-	void decreaseDummyRunNumber() { dummyRunNumber--; }
 
 	/* functions */
 	static int TapeNumber;
@@ -40,7 +31,12 @@ public:
 	void Reset();	//set the current position at the start of the file
 	void StartRead();
 	void StartWrite();
+	void ReadANumber(int& number);	//
+
+	/*	reading/writing with buffer	*/
+	void ReadToBuff(int* buff, int buffSize);
+	void WriteFromBuff(int* buff, int buffSize);
+
 	//void copy();	//copies current Tape 
 	//void copyrun();
-	void Close();	//closes fileObject
 };
