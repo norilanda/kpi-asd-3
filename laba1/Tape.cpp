@@ -34,11 +34,13 @@ bool Tape::eor()
 {
 	for (int i = 0; i < endOfRuns.size(); i++)
 	{
-		if (endOfRuns[i] == long long int(fileObject.tellg()) + 1)
+		size_t currPos = size_t(fileObject.tellg()) - 1;
+		if (endOfRuns[i] == currPos)
 			return true;
-		if (endOfRuns[i] > long long int(fileObject.tellg()) + 1)
-			break;
+		if (endOfRuns[i] > currPos)
+			return false;
 	}
+	return false;
 }
 
 void Tape::destroy()
@@ -77,6 +79,16 @@ void Tape::ReadANumber(int& number)
 void Tape::WriteANumber(int& number)
 {
 	fileObject.write((char*)&number, sizeof(int));
+}
+void Tape::AddEndOfRuns()
+{
+	endOfRuns.push_back(long long int(fileObject.tellp()) - 1);
+}
+void Tape::remove_run_position()
+{
+	for (int i = 1; i < endOfRuns.size(); i++)
+		endOfRuns[i - 1] = endOfRuns[i];
+	endOfRuns.pop_back();
 }
 
 void Tape::ReadToBuff(int* buff, int buffSize)

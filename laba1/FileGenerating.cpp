@@ -39,6 +39,8 @@ void display_file_numbers_from_range(string fileName, int startNumber, int lastN
 	{
 		inFile.seekg(0, ios::end);
 		lastNumber = inFile.tellg();
+		lastNumber /= sizeof(int);
+		lastNumber--;
 		inFile.seekg(0, ios::beg);
 	}
 	inFile.seekg(startNumber * sizeof(int));
@@ -67,6 +69,19 @@ void display_file_numbers_from_range(string fileName, int startNumber, int lastN
 			cout << setw(4)<<buff[k] << " ";
 			numbersInOneRow++;
 		}
+	}
+	inFile.close();
+}
+
+void display_file(string fileName)
+{
+	ifstream inFile;
+	inFile.open(fileName, ios::binary);
+	int n;
+	while (!inFile.eof())
+	{
+		inFile.read((char*)&n, sizeof(int));
+		cout << n << " ";
 	}
 	inFile.close();
 }

@@ -13,6 +13,8 @@ int main()
     string outFilePath = "files\\unsortedFile.txt";
     string smallFilePath = "files\\smallUnsortedFile.txt";
     string sortedRunsPath = "Tape4.txt";
+
+    string sortedFile = "files\\sortedFile.txt";
     //display_file_numbers_from_range(smallFilePath, 1, 1000);
     /*generate_little_file(tempFilePath);*/
     const int bytesInOneRun = 1024 * 1024;
@@ -26,12 +28,15 @@ int main()
     cout << "\n\n Sorted:\n\n";
     ppm.InitialDistribution();
     //display_file_numbers_from_range(sortedRunsPath, 1, 1000);
-    display_file_numbers_from_range("Tape1.txt", 1, 1000);
+    /*display_file_numbers_from_range("Tape1.txt", 1, -1);
     cout << "\n\n";
-    display_file_numbers_from_range("Tape2.txt", 1, 1000);
+    display_file_numbers_from_range("Tape2.txt", 1, -1);
     cout << "\n\n";
-    display_file_numbers_from_range("Tape3.txt", 1, 1000);
-    cout << "\n\n";
-    //ppm.Polyphase();
+    display_file_numbers_from_range("Tape3.txt", 1, -1);
+    cout << "\n\n";*/
+
+    ppm.Polyphase();
     ppm.deleteTempFiles();
+    ppm.renameFinalFile(sortedFile);
+    display_file_numbers_from_range(sortedFile, 1, 1000);
 }

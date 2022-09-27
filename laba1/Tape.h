@@ -35,7 +35,10 @@ public:
 	void StartWrite();
 	void ReadANumber(int& number);	//
 	void WriteANumber(int& number);
+
 	void calculate_total_runs() { totalRunNumber = runNumber + dummyRunNumber; }
+	void AddEndOfRuns();	//adds to end of runs last writed position
+	void remove_run_position();
 
 	/*	reading/writing with buffer	*/
 	void ReadToBuff(int* buff, int buffSize);
