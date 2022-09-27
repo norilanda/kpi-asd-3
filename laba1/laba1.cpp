@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 #include "Tape.h"
 #include "PolyphaseMerge.h"
 #include "FileGenerating.h"
@@ -10,33 +11,30 @@ int Tape::TapeNumber = 0;
 
 int main()
 {
-    string outFilePath = "files\\unsortedFile.txt";
-    string smallFilePath = "files\\smallUnsortedFile.txt";
-    string sortedRunsPath = "Tape4.txt";
+    string smallFilePath = "files\\smallUnsortedFile.txt"; 
+    string middleoutFilePath = "files\\middleUnsortedFile.txt";
 
     string sortedFile = "files\\sortedFile.txt";
-    //display_file_numbers_from_range(smallFilePath, 1, 1000);
-    /*generate_little_file(tempFilePath);*/
     const int bytesInOneRun = 1024 * 1024;
     const int bytesInOneRunSmall = 400;
 
+    clock_t start = clock();
     PolyphaseMerge ppm(4);
-    int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
+    int runNumber = ppm.createRuns(middleoutFilePath, bytesInOneRun);
+    //int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
     ppm.DistributeRunNumber(runNumber);
-    /*ppm.createRuns(outFilePath, bytesInOneRun);*/
    
     cout << "\n\n Sorted:\n\n";
     ppm.InitialDistribution();
-    //display_file_numbers_from_range(sortedRunsPath, 1, 1000);
-    /*display_file_numbers_from_range("Tape1.txt", 1, -1);
-    cout << "\n\n";
-    display_file_numbers_from_range("Tape2.txt", 1, -1);
-    cout << "\n\n";
-    display_file_numbers_from_range("Tape3.txt", 1, -1);
-    cout << "\n\n";*/
 
     ppm.Polyphase();
     ppm.deleteTempFiles();
     ppm.renameFinalFile(sortedFile);
+    clock_t end = clock();
+
+    //display_file(sortedFile);
     display_file_numbers_from_range(sortedFile, 1, 1000);
+    remove(sortedFile.c_str());
+    double time = ((double)end - start) / ((double)CLOCKS_PER_SEC);
+    cout << "\nUsed time: " << time << " sec";
 }

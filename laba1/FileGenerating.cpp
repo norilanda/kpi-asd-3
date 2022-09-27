@@ -12,8 +12,8 @@ void generate_little_file(string fileName)
 	ofstream outFile;
 	outFile.open(fileName, ios::binary);
 	int min = 0;
-	int max = 1000;//10000
-	long int number = 1000;//3145728
+	int max = 20000;//1000
+	long int number = 3145728;//1000
 	vector <int> arr;
 	arr.resize(number);
 	for (int i=0;i< number;i++)
@@ -85,32 +85,3 @@ void display_file(string fileName)
 	}
 	inFile.close();
 }
-
-//void dispaly_file(fstream& fileObject)
-//{
-//	fileObject.seekg(0, ios::beg);
-//	int buffSize = 100;
-//	vector <int> buff;
-//	buff.resize(buffSize);
-//	const int maxNumbersInOneRow = 30;
-//	int numbersInOneRow = 0;
-//	while (!fileObject.eof())
-//	{
-//		int j = 0;
-//		while (j < buffSize && !fileObject.eof())
-//		{
-//			fileObject.read((char*)&buff[j], sizeof(int));
-//			j++;
-//		}
-//		for (int k = 0; k < j; k++)
-//		{
-//			if (numbersInOneRow >= maxNumbersInOneRow)
-//			{
-//				cout << "\n";
-//				numbersInOneRow = 0;
-//			}
-//			cout << setw(4) << buff[k] << " ";
-//			numbersInOneRow++;
-//		}
-//	}
-//}

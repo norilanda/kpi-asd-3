@@ -65,9 +65,17 @@ void PolyphaseMerge::Polyphase()
 		int temp = TapesIndexArray[tapeIndex];	//swapping the merged Tape and the used Tape
 		TapesIndexArray[tapeIndex] = TapesIndexArray[N - 1];
 		TapesIndexArray[N - 1] = temp;
-
+		//for (int i = 0; i < N; i++)//
+		//{
+		//	cout << "Real: " << Tapes[i].runNumber << " Dummy: " << Tapes[i].dummyRunNumber << " Total: " << Tapes[i].totalRunNumber << "\n";
+		//	for (int j = 0; j < Tapes[i].endOfRuns.size(); j++)
+		//		cout << "end " << Tapes[i].endOfRuns[j] << " ";
+		//	cout << "\n";
+		//} cout << "\n";
 		level--;
 	}
+	for (int i = 0; i < N; i++)
+		Tapes[i].fileObject.close();
 }
 void PolyphaseMerge::mergeRuns()
 {
@@ -144,28 +152,24 @@ void PolyphaseMerge::InitialDistribution()
 {
 	Tapes[N - 1].StartRead();
 	int currRun = 0;
-	long long int firstPos = 0;
-	/*for (int i = 0; i < Tapes[N - 1].endOfRuns.size(); i++)
-		cout << Tapes[N - 1].endOfRuns[i] << " \n";*/
+	size_t firstPos = 0;
+	
 	for (int i = 0; i < N - 1; i++)
 	{
-		/*cout << "rn" << Tapes[i].runNumber << "\n";*/
 		for (int j = 0; j < Tapes[i].runNumber; j++)
 		{
-			long long int lastPos = Tapes[N - 1].endOfRuns[currRun];
-			long long int numberOfNumbers = (lastPos - firstPos + 1)/sizeof(int);
+			size_t lastPos = Tapes[N - 1].endOfRuns[currRun];
+			size_t numberOfNumbers = (lastPos - firstPos + 1)/sizeof(int);
 			firstPos = lastPos;
 			currRun++;
 			int* buff = new int[numberOfNumbers];
 
-			Tapes[N - 1].ReadToBuff(buff, numberOfNumbers);//
+			Tapes[N - 1].ReadToBuff(buff, numberOfNumbers);
 			
 			Tapes[i].WriteFromBuff(buff, numberOfNumbers);
 			Tapes[i].AddEndOfRuns();
 		}
-		/*for (int j = 0; j < Tapes[i].endOfRuns.size(); j++)
-			cout << Tapes[i].endOfRuns[j] << " \n"; 
-		cout << "\n";*/
+		
 		Tapes[i].fileObject.flush();
 		Tapes[i].StartRead();
 	}
@@ -212,9 +216,9 @@ int PolyphaseMerge::createRuns(string filePath, int bytesInOneRun)
 	sortedRunsFile.ReadToBuff(buff, newBuffSize);
 	sort(buff, buff + newBuffSize);	//sorting the run
 	Tapes[N - 1].WriteFromBuff(buff, newBuffSize);
-	Tapes[N - 1].AddEndOfRuns();
 	Tapes[N - 1].fileObject.flush();
-	cout << Tapes[N - 1].fileObject.tellp();
+	Tapes[N - 1].AddEndOfRuns();
+	
 	//delete []buff!!!!!
 	return runNumber;
 }
@@ -223,9 +227,9 @@ int PolyphaseMerge::pickSmallestTotalNumber(int& tapeIndex)
 	int smallest = INT_MAX;
 	for (int i = 0; i < N; i++)
 	{
-		if (Tapes[i].totalRunNumber > 0 && Tapes[i].totalRunNumber < smallest)
+		if (Tapes[TapesIndexArray[i]].totalRunNumber > 0 && Tapes[TapesIndexArray[i]].totalRunNumber < smallest)
 		{
-			smallest = Tapes[i].totalRunNumber;
+			smallest = Tapes[TapesIndexArray[i]].totalRunNumber;
 			tapeIndex = i;
 		}
 	}
@@ -241,6 +245,5 @@ void PolyphaseMerge::deleteTempFiles()
 }
 void PolyphaseMerge::renameFinalFile(string fileName)
 {
-	Tapes[finalTapeIndex].fileObject.close();
 	rename(Tapes[finalTapeIndex].fileName.c_str(), fileName.c_str());
 }
