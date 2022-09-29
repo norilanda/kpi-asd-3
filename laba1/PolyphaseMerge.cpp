@@ -58,6 +58,7 @@ void PolyphaseMerge::Polyphase()
 			else
 			{				
 				mergeRuns();	//mergeing
+				//mergeRunsOptimized();
 				currRuns--;
 			}			
 		}
@@ -65,13 +66,15 @@ void PolyphaseMerge::Polyphase()
 		int temp = TapesIndexArray[tapeIndex];	//swapping the merged Tape and the used Tape
 		TapesIndexArray[tapeIndex] = TapesIndexArray[N - 1];
 		TapesIndexArray[N - 1] = temp;
+		///**/
 		//for (int i = 0; i < N; i++)//
 		//{
 		//	cout << "Real: " << Tapes[i].runNumber << " Dummy: " << Tapes[i].dummyRunNumber << " Total: " << Tapes[i].totalRunNumber << "\n";
-		//	for (int j = 0; j < Tapes[i].endOfRuns.size(); j++)
+		//	/*for (int j = 0; j < Tapes[i].endOfRuns.size(); j++)
 		//		cout << "end " << Tapes[i].endOfRuns[j] << " ";
-		//	cout << "\n";
+		//	cout << "\n";*/
 		//} cout << "\n";
+		///**/
 		level--;
 	}
 	for (int i = 0; i < N; i++)

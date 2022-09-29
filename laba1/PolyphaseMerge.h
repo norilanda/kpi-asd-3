@@ -32,4 +32,9 @@ public:
 	int pickSmallestTotalNumber(int& tapeIndex);
 	void deleteTempFiles();	//delets all temp files
 	void renameFinalFile(string fileName);
+
+
+
+	/*	optimization functions	*/
+	void mergeRunsOptimized();
 };

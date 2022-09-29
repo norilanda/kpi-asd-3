@@ -20,8 +20,8 @@ int main()
 
     clock_t start = clock();
     PolyphaseMerge ppm(4);
-    int runNumber = ppm.createRuns(middleoutFilePath, bytesInOneRun);
-    //int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
+    //int runNumber = ppm.createRuns(middleoutFilePath, bytesInOneRun);
+    int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
     ppm.DistributeRunNumber(runNumber);
    
     cout << "\n\n Sorted:\n\n";

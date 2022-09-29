@@ -1,6 +1,7 @@
 #include "Tape.h"
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 using std::string;
 
@@ -98,4 +99,15 @@ void Tape::ReadToBuff(int* buff, int buffSize)
 void Tape::WriteFromBuff(int* buff, int buffSize)
 {
 	fileObject.write((char*)buff, buffSize * sizeof(int));
+}
+
+/*	optimization functions	*/
+//void Tape::ReadToBuffOptimized(int* buff, int buffSize)
+//{
+//
+//}
+
+int Tape::calc_buff_size(int maxBuffSize)
+{
+	return min(maxBuffSize, int(endOfRuns[0] - size_t(fileObject.tellg()) + 1));
 }

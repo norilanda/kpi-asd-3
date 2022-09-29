@@ -131,6 +131,7 @@
     <ClCompile Include="FileGenerating.cpp" />
     <ClCompile Include="laba1.cpp" />
     <ClCompile Include="PolyphaseMerge.cpp" />
+    <ClCompile Include="PolyphaseMergeOptimized.cpp" />
     <ClCompile Include="Tape.cpp" />
   </ItemGroup>
   <ItemGroup>

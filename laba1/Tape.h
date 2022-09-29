@@ -44,6 +44,9 @@ public:
 	void ReadToBuff(int* buff, int buffSize);
 	void WriteFromBuff(int* buff, int buffSize);
 
-	//void copy();	//copies current Tape 
-	//void copyrun();
+
+	/*	optimization functions	*/
+	//void ReadToBuffOptimized(int* buff, int buffSize);
+	int calc_buff_size(int maxBuffSize);
+	
 };
