@@ -135,11 +135,11 @@ namespace laba1_1
 
         public void Polyphase()   //for merging the sorted runs
         {
-            for (int i = 0; i < N; i++)
-            {
-                Console.WriteLine("Runnumber: " + Tapes[i].runNumber + " Dummy: " + Tapes[i].dummyRunNumber + " Total: " + Tapes[i].totalRunNumber);
-            }
-            Console.WriteLine();
+            //for (int i = 0; i < N; i++)
+            //{
+            //    Console.WriteLine("Runnumber: " + Tapes[i].runNumber + " Dummy: " + Tapes[i].dummyRunNumber + " Total: " + Tapes[i].totalRunNumber);
+            //}
+            //Console.WriteLine();
             while (level != 0)
             {
                 finalTapeIndex = TapesIndexArray[N - 1];

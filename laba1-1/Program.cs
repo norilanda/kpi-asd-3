@@ -35,7 +35,13 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
             FileManager.ConvertToCsv(sortedFile);
-            //File.Delete(sortedFile);
+            bool isSorted = Testing.isSorted(sortedFile, bytesInOneRun);
+            File.Delete(sortedFile);
+
+            if (isSorted)
+                Console.WriteLine("File is sorted");
+            else
+                Console.WriteLine("File is NOT sorted");
 
             Console.WriteLine("Elapsed Time is {0:00}:{1:00}:{2:00}.{3}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
