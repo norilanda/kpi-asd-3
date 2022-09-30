@@ -16,12 +16,12 @@ int main()
 
     string sortedFile = "files\\sortedFile.txt";
     const int bytesInOneRun = 1024 * 1024;
-    const int bytesInOneRunSmall = 400;
+    const int bytesInOneRunSmall = 1000;
 
     clock_t start = clock();
-    PolyphaseMerge ppm(4);
-    int runNumber = ppm.createRuns(middleoutFilePath, bytesInOneRun);
-    //int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
+    PolyphaseMerge ppm(3);
+    //int runNumber = ppm.createRuns(middleoutFilePath, bytesInOneRun);
+    int runNumber = ppm.createRuns(smallFilePath, bytesInOneRunSmall);
     ppm.DistributeRunNumber(runNumber);
    
     cout << "\n\n Sorted:\n\n";

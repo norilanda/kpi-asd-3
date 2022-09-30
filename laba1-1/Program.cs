@@ -10,21 +10,32 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            string smallFilePath = "files\\smallUnsortedFile.txt";
-            string middleoutFilePath = "files\\middleUnsortedFile.txt";
+            string smallFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\smallUnsortedFile.txt";
+            string middleoutFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\middleUnsortedFile.txt";
 
-            string sortedFile = "files\\sortedFile.txt";
+            string sortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\sortedFile.txt";
             const int bytesInOneRun = 1024 * 1024;
             const int bytesInOneRunSmall = 400;
-
+            int N = 4;
+                        
             Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            stopwatch.Start();                       
 
-            int temp=0;
-            FibonacciNumbers.calculate_runs_distribution(3, 10, ref temp);
+            PolyphaseMerge p = new PolyphaseMerge(N);
+
+            //int runNumber = p.createRuns(smallFilePath, bytesInOneRunSmall);
+            int runNumber = p.createRuns(middleoutFilePath, bytesInOneRun);
+            p.DistributeRunNumber(runNumber);
+            p.InitialDistribution();
+            p.Polyphase();
+
+            p.deleteTempFiles();
+            p.renameFinalFile(sortedFile);
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
+            FileManager.ConvertToCsv(sortedFile);
+            //File.Delete(sortedFile);
 
             Console.WriteLine("Elapsed Time is {0:00}:{1:00}:{2:00}.{3}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
 

@@ -12,14 +12,14 @@ namespace laba1_1
 {
     internal class FibonacciNumbers
     {
-        public static List<int> calculate_runs_distribution(int tapeNumbers, int runsNumber, ref int level) 
+        public static List<int> calculate_runs_distribution(int tapeNumbers, int runNumber, ref int level) 
         {
             int exponent = tapeNumbers - 2;
             List<int> fibonacciNumbers = new List<int>(new int[exponent + 1]);
             fibonacciNumbers[exponent] = 1;
             int i = exponent;
 
-            while (fibonacciNumbers[i] < runsNumber)
+            while (fibonacciNumbers[i] < runNumber)
             {
                 int nextNumber = 0;
                 for (int j = 0; j <= exponent; j++)

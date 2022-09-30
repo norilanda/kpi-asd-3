@@ -14,8 +14,10 @@ namespace laba1_1
         public int dummyRunNumber;
         public int totalRunNumber;
         public FileStream fileObject;
-        public List<int> endOfRuns;
-
+        public List<long> lengthOfRuns;  //in bytes
+        public BinaryReader binaryReader;
+        public BinaryWriter binaryWriter;
+        
         /* Constructors/Destructors */
         public Tape() 
         {
@@ -24,29 +26,68 @@ namespace laba1_1
             runNumber = 0;
             dummyRunNumber = 0;
             totalRunNumber = 0;
-            fileObject = new FileStream(fileName, FileMode.OpenOrCreate);
+            lengthOfRuns = new List<long>(); 
         }
-        public Tape(string filePath) { }
-        /*~Tape();*/
+        public Tape(string filePath) 
+        {
+            fileName = filePath;
+            runNumber = 0;
+            dummyRunNumber = 0;
+            totalRunNumber = 0;
+            lengthOfRuns = new List<long>();
+        }
 
         /* functions */
         public static int TapeNumber;
-        public bool eof() { return false; }
-        public bool eor() { return false; } //check the end of run
-        public void destroy() { } //for deleting the fileObject
-        public void Reset() { }   //set the current position at the start of the file
-        public void StartRead() { }
-        public void StartWrite() { }
-        public void ReadANumber(ref int number) { }  //
-        public void WriteANumber(ref int number) { }
+        public void destroy() //for deleting the fileObject
+        {            
+            File.Delete(fileName);
+        }
 
-        public void calculate_total_runs() { totalRunNumber = runNumber + dummyRunNumber; }
-        public void AddEndOfRuns() { }    //adds to end of runs last writed position
-        public void remove_run_position() { }
+        public void closeReaders()
+        {
+            binaryReader.Close();
+            binaryReader.Close();
+        }
+        public void Reset()  //set the current position at the start of the file
+        {
+            dummyRunNumber = 0;
+            runNumber = 0;
+            totalRunNumber = 0;
+            lengthOfRuns.Clear();
+        }  
+        public void StartRead() 
+        {
+            fileObject = new FileStream(fileName, FileMode.Open);
+            binaryReader = new BinaryReader(fileObject);
+        }
+        public void StartWrite() 
+        {
+            fileObject = new FileStream(fileName, FileMode.OpenOrCreate);
+            binaryWriter = new BinaryWriter(fileObject);           
+        }
+
+        public void StartWriteTrunc()
+        {
+            fileObject = new FileStream(fileName, FileMode.Truncate);
+            binaryWriter = new BinaryWriter(fileObject);
+        }
+        //public void ReadANumber(ref int number) { }  //
+        //public void WriteANumber(ref int number) { }
+
+        //public void calculate_total_runs() { totalRunNumber = runNumber + dummyRunNumber; }
+        public void AddLengthOfRuns(long runLenght) //adds to end of runs last writed position
+        {
+            lengthOfRuns.Add(runLenght);
+        }    
+        public void remove_run_position() 
+        { 
+            lengthOfRuns.RemoveAt(0);
+        }
 
         /*	reading/writing with buffer	*/
-        public void ReadToBuff(ref int buff, int buffSize) { }
-        public void WriteFromBuff(ref int buff, int buffSize) { }
+        //public void ReadToBuff(ref int buff, int buffSize) { }
+        //public void WriteFromBuff(ref int buff, int buffSize) { }
 
     }
 }

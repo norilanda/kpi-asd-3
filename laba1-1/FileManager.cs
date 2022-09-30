@@ -24,13 +24,30 @@ namespace laba1_1
             BinaryReader binaryFile = new BinaryReader(new FileStream(fileName, FileMode.Open));
             StreamWriter outputFile = new StreamWriter(outputFileName);
             outputFile.Write(binaryFile.ReadInt32());
-            while (binaryFile.PeekChar() != -1)
+            while (binaryFile.BaseStream.Position != binaryFile.BaseStream.Length)
             {
                 outputFile.Write(",");
                 outputFile.Write(binaryFile.ReadInt32());
             }
             binaryFile.Close();
             outputFile.Close();
+        }
+        public static int[] readArrayOfInts(BinaryReader binaryReader, long numberInOneRun)
+        {
+            byte[] bytesArray = binaryReader.ReadBytes((int)numberInOneRun * sizeof(int)); //reading the run as bytes
+            int[] buff = new int[numberInOneRun];
+            for (int j = 0; j < numberInOneRun; j++)    //converting to int
+            {
+                buff[j] = BitConverter.ToInt32(bytesArray, (int)j * sizeof(int));
+            }
+            return buff;
+        }
+        public static int writeArrayOfInts(BinaryWriter binaryWriter, ref int[] buff)
+        {
+            byte[] bytesArray = new byte[buff.Length * sizeof(int)];
+            Buffer.BlockCopy(buff, 0, bytesArray, 0, bytesArray.Length);
+            binaryWriter.Write(bytesArray); //write merged array
+            return bytesArray.Count();
         }
     }
 }
