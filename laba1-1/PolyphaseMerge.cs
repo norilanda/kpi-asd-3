@@ -61,8 +61,7 @@ namespace laba1_1
                 Array.Sort(buff);
                 long writtenBytes = FileManager.writeArrayOfInts(Tapes[N - 1].binaryWriter, ref buff);                
                 Tapes[N - 1].AddLengthOfRuns(writtenBytes);
-                usedBytes += writtenBytes;
-                //Console.WriteLine(Tapes[N - 1].lengthOfRuns[i] + " ");                
+                usedBytes += writtenBytes;               
             }
 
             long fileSize = new System.IO.FileInfo(filePath).Length;
@@ -239,8 +238,7 @@ namespace laba1_1
             Tapes[TapesIndexArray[N - 1]].runNumber++;
             Tapes[TapesIndexArray[N - 1]].totalRunNumber++;            
         }
-
-        /*  */                
+             
         public int pickSmallestTotalNumber(ref int tapeIndex) 
         {
             int smallest = Int32.MaxValue;
@@ -267,6 +265,12 @@ namespace laba1_1
         {
             Tapes[finalTapeIndex].closeReaders();
             File.Move(Tapes[finalTapeIndex].fileName, newFileName);
+        }
+
+        public void mergeRunsOptimized(long maxNumberOfBytes)
+        {
+            List<int[]> buffers = new List<int[]>();
+            List<int> writtenInts = new List<int>(new int[ActualRunsIndexArray.Count()]);
         }
     }
 }
