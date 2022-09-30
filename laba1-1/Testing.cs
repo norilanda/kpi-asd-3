@@ -10,6 +10,7 @@ namespace laba1_1
     {
         public static bool isSorted(string fileName, long chunkSize)
         {
+            //chunkSize = chunkSize/sizeof(int);
             long fileSize = new System.IO.FileInfo(fileName).Length / sizeof(int);
             int previous = Int32.MinValue;
             BinaryReader binaryReader = new BinaryReader(new FileStream(fileName, FileMode.Open));

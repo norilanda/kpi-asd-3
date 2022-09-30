@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -20,10 +21,11 @@ namespace laba1_1
         private List<int> ActualRunsIndexArray;   //stores indices of tapes with real runs that will be merged
         private int level;
         private int finalTapeIndex;
+        private int bytesInOneRun;
 
 
         /*	Constructors/Destructors */
-        public PolyphaseMerge(int TapesNumber) 
+        public PolyphaseMerge(int TapesNumber, int maxBytesInOneRun) 
         {
             N = TapesNumber;
             Tapes = new List<Tape>(new Tape[N]);
@@ -35,6 +37,7 @@ namespace laba1_1
             { TapesIndexArray[i] = i; }
             level = 0;
             finalTapeIndex = 0;
+            bytesInOneRun = maxBytesInOneRun;
         }
 
         public int calculateRunNumber(string filePath, ref long numberInOneRun, int bytesInOneRun)   //calculates total run number and how many numbers will be in each run
@@ -134,6 +137,7 @@ namespace laba1_1
 
         public void Polyphase()   //for merging the sorted runs
         {
+            int mode = 2;   //1 - without optimization; 2 - with optimization
             //for (int i = 0; i < N; i++)
             //{
             //    Console.WriteLine("Runnumber: " + Tapes[i].runNumber + " Dummy: " + Tapes[i].dummyRunNumber + " Total: " + Tapes[i].totalRunNumber);
@@ -143,7 +147,6 @@ namespace laba1_1
             {
                 finalTapeIndex = TapesIndexArray[N - 1];
                 int tapeIndex = -1;
-                /*  !!!!!!!!!!!!!!!!!!!!!   */
                 int currRuns = pickSmallestTotalNumber(ref tapeIndex);  //total number of runs in the last tape (also the smallest number of runs)
                 Tapes[TapesIndexArray[N - 1]].Reset();
                 Tapes[TapesIndexArray[N - 1]].binaryReader.Close();
@@ -170,7 +173,10 @@ namespace laba1_1
                     }
                     else
                     {
-                        mergeRuns();    //mergeing
+                        if (mode == 1)
+                            mergeRuns();    //mergeing
+                        else
+                            mergeRunsOptimized(bytesInOneRun);
                         currRuns--;
                     }
                 }
@@ -267,10 +273,74 @@ namespace laba1_1
             File.Move(Tapes[finalTapeIndex].fileName, newFileName);
         }
 
-        public void mergeRunsOptimized(long maxNumberOfBytes)
+        public void mergeRunsOptimized(int maxNumberOfBytes)
         {
             List<int[]> buffers = new List<int[]>();
-            List<int> writtenInts = new List<int>(new int[ActualRunsIndexArray.Count()]);
+            List<int> indexInBuffs = new List<int>(new int[ActualRunsIndexArray.Count()]);
+            long writtenIntsToSourceFile = 0;
+            int[] sourceBuff = new int[maxNumberOfBytes/sizeof(int)];
+            for (int i = 0; i < ActualRunsIndexArray.Count(); i++)
+            {
+                long currBuffSize = Math.Min(maxNumberOfBytes, Tapes[ActualRunsIndexArray[i]].lengthOfRuns[0]);
+                Tapes[ActualRunsIndexArray[i]].lengthOfRuns[0] -= currBuffSize;
+                buffers.Add(FileManager.readArrayOfInts(Tapes[ActualRunsIndexArray[i]].binaryReader, currBuffSize/sizeof(int)));
+                indexInBuffs[i] = 0;
+            }
+            long totalWrittenNumberOfInts = 0;
+            while (ActualRunsIndexArray.Count() != 0)
+            {
+                int min = buffers[0][indexInBuffs[0]];
+                int minTapeIndex = 0;
+                for (int i = 1; i < buffers.Count(); i++)
+                {
+                    if (buffers[i][indexInBuffs[i]] < min)   //finding the smallest number
+                    {
+                        min = buffers[i][indexInBuffs[i]];
+                        minTapeIndex = i;
+                    }
+                }
+                sourceBuff[writtenIntsToSourceFile] = min;  //writing to source buff
+                writtenIntsToSourceFile++;
+                if(writtenIntsToSourceFile == sourceBuff.Length)    //flush the source buff
+                {
+                    FileManager.writeArrayOfInts(Tapes[TapesIndexArray[N - 1]].binaryWriter, ref sourceBuff);
+                    writtenIntsToSourceFile = 0;
+                }
+                totalWrittenNumberOfInts++;
+                indexInBuffs[minTapeIndex]++;
+                if (indexInBuffs[minTapeIndex] == buffers[minTapeIndex].Length)//check if buff is not empty
+                {
+                    if(Tapes[ActualRunsIndexArray[minTapeIndex]].lengthOfRuns[0] == 0)  //if run has been used
+                    {
+                        Tapes[ActualRunsIndexArray[minTapeIndex]].runNumber--;
+                        Tapes[ActualRunsIndexArray[minTapeIndex]].totalRunNumber--;
+                        Tapes[ActualRunsIndexArray[minTapeIndex]].remove_run_position();
+                        ActualRunsIndexArray[minTapeIndex] = ActualRunsIndexArray[ActualRunsIndexArray.Count() - 1];
+                        ActualRunsIndexArray.RemoveAt(ActualRunsIndexArray.Count - 1);
+
+                        buffers[minTapeIndex] = (int[])buffers[buffers.Count() - 1].Clone();
+                        buffers.RemoveAt(buffers.Count - 1);
+
+                        indexInBuffs[minTapeIndex] = indexInBuffs[indexInBuffs.Count - 1];
+                        indexInBuffs.RemoveAt(indexInBuffs.Count - 1);                        
+                    }
+                    else
+                    {
+                        long currBuffSize = Math.Min(maxNumberOfBytes, Tapes[ActualRunsIndexArray[minTapeIndex]].lengthOfRuns[0]);
+                        Tapes[ActualRunsIndexArray[minTapeIndex]].lengthOfRuns[0] -= currBuffSize;
+                        buffers[minTapeIndex] = FileManager.readArrayOfInts(Tapes[ActualRunsIndexArray[minTapeIndex]].binaryReader, currBuffSize / sizeof(int));
+                        indexInBuffs[minTapeIndex] = 0;
+                    }
+                }                
+            }
+            //не забути флашнути бафф, причому з дійсним розміром
+            int[] lastInts = new int[writtenIntsToSourceFile];
+            Array.Copy(sourceBuff, 0, lastInts, 0, writtenIntsToSourceFile);
+            FileManager.writeArrayOfInts(Tapes[TapesIndexArray[N - 1]].binaryWriter, ref lastInts);
+
+            Tapes[TapesIndexArray[N - 1]].AddLengthOfRuns(totalWrittenNumberOfInts * sizeof(int));
+            Tapes[TapesIndexArray[N - 1]].runNumber++;
+            Tapes[TapesIndexArray[N - 1]].totalRunNumber++;
         }
     }
 }

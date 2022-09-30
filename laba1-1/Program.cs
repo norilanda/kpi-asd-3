@@ -17,11 +17,15 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
             const int bytesInOneRun = 1024 * 1024;
             const int bytesInOneRunSmall = 400;
             int N = 4;
-                        
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();                       
+            if (File.Exists(sortedFile))
+                File.Delete(sortedFile);
 
-            PolyphaseMerge p = new PolyphaseMerge(N);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRunSmall);
+            PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRun);
 
             //int runNumber = p.createRuns(smallFilePath, bytesInOneRunSmall);
             int runNumber = p.createRuns(middleoutFilePath, bytesInOneRun);
