@@ -24,9 +24,9 @@ namespace laba1_1
             Console.WriteLine("\n");
 
             Console.WriteLine("How many MB will be in one run? For large files consider 300MB");
-            int sizeInMB = Convert.ToInt32(Console.ReadLine());
+            double sizeInMB = Convert.ToDouble(Console.ReadLine());
             const int bytesInOneMB = 1024 * 1024;
-            bytesInOneRun = sizeInMB * bytesInOneMB;
+            bytesInOneRun = (int)(sizeInMB * bytesInOneMB);
             Console.WriteLine();
 
             Console.WriteLine("Do you want optimized version of polyphase merge sort or polyphase merge sort without optimization? 1 - without optimization, 2 - with optimization");
