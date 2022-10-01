@@ -9,6 +9,29 @@ namespace laba1_1
 {
     internal class FileManager
     {
+        public static void generateFile(string fileName, long sizeInMB, char mode = 'n', int minValue = 0, int maxValue = 20000)
+        {
+            BinaryWriter binaryWriter = null;
+            if (mode == 'n')
+                binaryWriter = new BinaryWriter(new FileStream(fileName, FileMode.Create));
+            else if (mode == 'a')
+            {
+                if (File.Exists(fileName))
+                    binaryWriter = new BinaryWriter(new FileStream(fileName, FileMode.Append));
+                else
+                    binaryWriter = new BinaryWriter(new FileStream(fileName, FileMode.Create));
+            }
+            const int bytesInOneMB = 1024 * 1024;
+            long number = sizeInMB * bytesInOneMB / sizeof(int);
+            int[] buff = new int[number];
+            Random rnd = new Random();
+            for (int i=0; i<number; i++)
+            {
+                buff[i] = rnd.Next(minValue, maxValue+1);
+            }
+            writeArrayOfInts(binaryWriter, ref buff);
+            binaryWriter.Close();
+        }
         public static void display_file_numbers_from_range(string fileName, int startNumber = 1, int lastNumber = 0) { }	//displays all the numbers between startNumber and lastNumber positions
         public static string CreateCsvFileName(string fileName)
         {

@@ -12,23 +12,28 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
         {
             string smallFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\smallUnsortedFile.txt";
             string middleoutFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\middleUnsortedFile.txt";
+            string largeFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\largeUnsortedFile.txt";
 
+            string unsortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\largeUnsortedFile.txt";
             string sortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\sortedFile.txt";
-            const int bytesInOneRun = 1024 * 1024;
+            
             const int bytesInOneRunSmall = 400;
+            const int bytesInOneRunMiddle = 1024 * 1024;
+            const int sizeInMB = 100;
+            int bytesInOneRun = 1024 * 1024*20;
+            
+            //FileManager.generateFile(largeFilePath, sizeInMB, 'a');
             int N = 4;
             if (File.Exists(sortedFile))
                 File.Delete(sortedFile);
 
-
+            //InputFromUser.getInitialValues(ref N, ref unsortedFile, ref sortedFile, ref bytesInOneRun);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            //PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRunSmall);
             PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRun);
-
-            //int runNumber = p.createRuns(smallFilePath, bytesInOneRunSmall);
-            int runNumber = p.createRuns(middleoutFilePath, bytesInOneRun);
+                        
+            int runNumber = p.createRuns(unsortedFile, bytesInOneRun);
             p.DistributeRunNumber(runNumber);
             p.InitialDistribution();
             p.Polyphase();
@@ -38,9 +43,9 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
-            FileManager.ConvertToCsv(sortedFile);
+            //FileManager.ConvertToCsv(sortedFile);
             bool isSorted = Testing.isSorted(sortedFile, bytesInOneRun);
-            File.Delete(sortedFile);
+            //File.Delete(sortedFile);
 
             if (isSorted)
                 Console.WriteLine("File is sorted");

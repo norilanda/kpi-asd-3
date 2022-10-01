@@ -18,7 +18,7 @@ namespace laba1_1
             List<int> fibonacciNumbers = new List<int>(new int[exponent + 1]);
             fibonacciNumbers[exponent] = 1;
             int i = exponent;
-
+            
             while (fibonacciNumbers[i] < runNumber)
             {
                 int nextNumber = 0;
