@@ -10,54 +10,30 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            string smallFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\smallUnsortedFile.txt";
-            string middleoutFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\middleUnsortedFile.txt";
-            string largeFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\largeUnsortedFile.txt";
-            string file500MBPath = "D:\\USER_FOLDER_2\\DESKTOP\\filesASD\\largeUnsortedFile500MB.txt";
-
-            string unsortedFile = largeFilePath;
-            string sortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\sortedFile.txt";
-            
-            const int bytesInOneRunSmall = 400;
-            const int bytesInOneRunMiddle = 1024 * 1024;
-            const int bytesInOneRunLarge = 1024 * 1024 * 300;
-            const int bytes500MB = 1024 * 1024 * 200;
-            const int sizeInMB = 100;
-            long bytesInOneRun = bytesInOneRunLarge;
-            
-            //FileManager.generateFile(largeFilePath, sizeInMB, 'a');
-            int N = 4;
+            string unsortedFile = "";
+            string sortedFile = "";            
+            long bytesInOneRun = 0;
+            int mode = 2;   //1 - without optimization; 2 - with optimization
+            long maxSizeInBytesToConvert = 1024 * 1024 * 15;    //max file size when we can convert to csv
+            int N = 3;
+            InputFromUser.getInitialValues(ref N, ref unsortedFile, ref sortedFile, ref bytesInOneRun, ref mode);
             if (File.Exists(sortedFile))
                 File.Delete(sortedFile);
-
-            //InputFromUser.getInitialValues(ref N, ref unsortedFile, ref sortedFile, ref bytesInOneRun);
+            
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRun);
                         
-            int runNumber = p.createRuns(unsortedFile, bytesInOneRun);
-            p.DistributeRunNumber(runNumber);
-            p.InitialDistribution();
-            p.Polyphase();
-
-            p.deleteTempFiles();
-            p.renameFinalFile(sortedFile);
+            p.PolyphaseMergeSort(unsortedFile, sortedFile, mode);
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
-            //FileManager.ConvertToCsv(sortedFile);
+
+            if(InputFromUser.askIfConvertToCsv(sortedFile, maxSizeInBytesToConvert))
+                FileManager.ConvertToCsv(sortedFile);
             bool isSorted = Testing.isSorted(sortedFile, bytesInOneRun);
-            //File.Delete(sortedFile);
-
-            Console.WriteLine("Unsorted size = " + new System.IO.FileInfo(unsortedFile).Length);
-            Console.WriteLine("Sorted size   = " + new System.IO.FileInfo(sortedFile).Length);
-            if (isSorted)
-                Console.WriteLine("File is sorted");
-            else
-                Console.WriteLine("File is NOT sorted");
-
-            Console.WriteLine("Elapsed Time is {0:00}:{1:00}:{2:00}.{3}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            InputFromUser.displaySortInformation(unsortedFile, sortedFile, ts, isSorted);           
 
         }
     }

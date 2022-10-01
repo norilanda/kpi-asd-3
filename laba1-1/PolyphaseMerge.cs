@@ -24,8 +24,7 @@ namespace laba1_1
         private long bytesInOneRun;
 
 
-        /*	Constructors/Destructors */
-        public PolyphaseMerge(int TapesNumber, long maxBytesInOneRun) 
+        public PolyphaseMerge(int TapesNumber, long maxBytesInOneRun)   /*	Constructor */
         {
             N = TapesNumber;
             Tapes = new List<Tape>(new Tape[N]);
@@ -38,6 +37,17 @@ namespace laba1_1
             level = 0;
             finalTapeIndex = 0;
             bytesInOneRun = maxBytesInOneRun;
+        }
+
+        public void PolyphaseMergeSort(string unsortedFile, string sortedFile, int mode)
+        {
+            int runNumber = createRuns(unsortedFile, bytesInOneRun);
+            DistributeRunNumber(runNumber);
+            InitialDistribution();
+            Polyphase(mode);
+
+            deleteTempFiles();
+            renameFinalFile(sortedFile);
         }
 
         public int calculateRunNumber(string filePath, ref long numberInOneRun, long bytesInOneRun)   //calculates total run number and how many numbers will be in each run
@@ -135,10 +145,8 @@ namespace laba1_1
             Tapes[N - 1].binaryReader.Close();
         }
 
-        public void Polyphase()   //for merging the sorted runs
-        {
-            int mode = 2;   //1 - without optimization; 2 - with optimization
-            
+        public void Polyphase(int mode)   //for merging the sorted runs
+        {           
             while (level != 0)
             {
                 finalTapeIndex = TapesIndexArray[N - 1];
@@ -323,8 +331,7 @@ namespace laba1_1
                         indexInBuffs[minTapeIndex] = 0;
                     }
                 }                
-            }
-            //не забути флашнути бафф, причому з дійсним розміром
+            }            
             int[] lastInts = new int[writtenIntsToSourceFile];
             Array.Copy(sourceBuff, 0, lastInts, 0, writtenIntsToSourceFile);
             FileManager.writeArrayOfInts(Tapes[TapesIndexArray[N - 1]].binaryWriter, ref lastInts);
