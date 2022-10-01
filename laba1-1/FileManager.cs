@@ -57,7 +57,7 @@ namespace laba1_1
         }
         public static int[] readArrayOfInts(BinaryReader binaryReader, long numberInOneRun)
         {
-            byte[] bytesArray = binaryReader.ReadBytes((int)numberInOneRun * sizeof(int)); //reading the run as bytes
+            byte[] bytesArray = binaryReader.ReadBytes((int)(numberInOneRun * sizeof(int))); //reading the run as bytes
             int[] buff = new int[bytesArray.Length/sizeof(int)];
             for (int j = 0; j < bytesArray.Length / sizeof(int); j++)    //converting to int
             {

@@ -13,14 +13,17 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
             string smallFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\smallUnsortedFile.txt";
             string middleoutFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\middleUnsortedFile.txt";
             string largeFilePath = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\largeUnsortedFile.txt";
+            string file500MBPath = "D:\\USER_FOLDER_2\\DESKTOP\\filesASD\\largeUnsortedFile500MB.txt";
 
-            string unsortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\largeUnsortedFile.txt";
+            string unsortedFile = largeFilePath;
             string sortedFile = "C:\\Users\\ACER\\source\\repos\\kpi-asd-3\\laba1-1\\files\\sortedFile.txt";
             
             const int bytesInOneRunSmall = 400;
             const int bytesInOneRunMiddle = 1024 * 1024;
+            const int bytesInOneRunLarge = 1024 * 1024 * 300;
+            const int bytes500MB = 1024 * 1024 * 200;
             const int sizeInMB = 100;
-            int bytesInOneRun = 1024 * 1024*20;
+            long bytesInOneRun = bytesInOneRunLarge;
             
             //FileManager.generateFile(largeFilePath, sizeInMB, 'a');
             int N = 4;
@@ -47,6 +50,8 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
             bool isSorted = Testing.isSorted(sortedFile, bytesInOneRun);
             //File.Delete(sortedFile);
 
+            Console.WriteLine("Unsorted size = " + new System.IO.FileInfo(unsortedFile).Length);
+            Console.WriteLine("Sorted size   = " + new System.IO.FileInfo(sortedFile).Length);
             if (isSorted)
                 Console.WriteLine("File is sorted");
             else

@@ -21,11 +21,11 @@ namespace laba1_1
         private List<int> ActualRunsIndexArray;   //stores indices of tapes with real runs that will be merged
         private int level;
         private int finalTapeIndex;
-        private int bytesInOneRun;
+        private long bytesInOneRun;
 
 
         /*	Constructors/Destructors */
-        public PolyphaseMerge(int TapesNumber, int maxBytesInOneRun) 
+        public PolyphaseMerge(int TapesNumber, long maxBytesInOneRun) 
         {
             N = TapesNumber;
             Tapes = new List<Tape>(new Tape[N]);
@@ -40,14 +40,14 @@ namespace laba1_1
             bytesInOneRun = maxBytesInOneRun;
         }
 
-        public int calculateRunNumber(string filePath, ref long numberInOneRun, int bytesInOneRun)   //calculates total run number and how many numbers will be in each run
+        public int calculateRunNumber(string filePath, ref long numberInOneRun, long bytesInOneRun)   //calculates total run number and how many numbers will be in each run
         {
             long fileSize = new System.IO.FileInfo(filePath).Length;
-            int runNumber = (int)fileSize / bytesInOneRun;
+            int runNumber = (int)(fileSize / bytesInOneRun);
             numberInOneRun = bytesInOneRun / sizeof(int);
             return runNumber;            
         } 
-        public int createRuns(string filePath, int bytesInOneRun) //divides initial file into runs and sorts every of them
+        public int createRuns(string filePath, long bytesInOneRun) //divides initial file into runs and sorts every of them
         {
             long numberInOneRun = 0;
             int runNumber = calculateRunNumber(filePath, ref numberInOneRun, bytesInOneRun);
@@ -71,7 +71,7 @@ namespace laba1_1
             long newBuffSize = fileSize - usedBytes;
             long newNumberInOneRun = newBuffSize / sizeof(int);
                        
-            int[] lastBuff = FileManager.readArrayOfInts(sortedRunsFile.binaryReader, numberInOneRun);
+            int[] lastBuff = FileManager.readArrayOfInts(sortedRunsFile.binaryReader, newNumberInOneRun);
             Array.Sort(lastBuff);
             long newWrittenBytes = FileManager.writeArrayOfInts(Tapes[N - 1].binaryWriter, ref lastBuff);
             Tapes[N - 1].AddLengthOfRuns(newWrittenBytes);
@@ -138,11 +138,7 @@ namespace laba1_1
         public void Polyphase()   //for merging the sorted runs
         {
             int mode = 2;   //1 - without optimization; 2 - with optimization
-            //for (int i = 0; i < N; i++)
-            //{
-            //    Console.WriteLine("Runnumber: " + Tapes[i].runNumber + " Dummy: " + Tapes[i].dummyRunNumber + " Total: " + Tapes[i].totalRunNumber);
-            //}
-            //Console.WriteLine();
+            
             while (level != 0)
             {
                 finalTapeIndex = TapesIndexArray[N - 1];
@@ -180,17 +176,12 @@ namespace laba1_1
                         currRuns--;
                     }
                 }
-                Tapes[TapesIndexArray[N - 1]].binaryWriter.Close();
-                //FileManager.ConvertToCsv(Tapes[TapesIndexArray[N - 1]].fileName);
+                Tapes[TapesIndexArray[N - 1]].binaryWriter.Close();                
                 Tapes[TapesIndexArray[N - 1]].StartRead();  //start reading recently merged Tape
                 int temp = TapesIndexArray[tapeIndex];  //swapping the merged Tape and the used Tape
                 TapesIndexArray[tapeIndex] = TapesIndexArray[N - 1];
                 TapesIndexArray[N - 1] = temp;                
-                level--;
-                //for(int i=0;i<N;i++)
-                //{
-                //    Console.WriteLine("Runnumber: " + Tapes[i].runNumber + " Dummy: " +Tapes[i].dummyRunNumber + " Total: " + Tapes[i].totalRunNumber);                 
-                //}  Console.WriteLine();             
+                level--;                             
             }
             for (int i = 0; i < N-1; i++)
                 Tapes[i].binaryReader.Close();
@@ -273,7 +264,7 @@ namespace laba1_1
             File.Move(Tapes[finalTapeIndex].fileName, newFileName);
         }
 
-        public void mergeRunsOptimized(int maxNumberOfBytes)
+        public void mergeRunsOptimized(long maxNumberOfBytes)
         {
             List<int[]> buffers = new List<int[]>();
             List<int> indexInBuffs = new List<int>(new int[ActualRunsIndexArray.Count()]);
