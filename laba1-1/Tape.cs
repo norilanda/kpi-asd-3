@@ -71,11 +71,7 @@ namespace laba1_1
         {
             fileObject = new FileStream(fileName, FileMode.Truncate);
             binaryWriter = new BinaryWriter(fileObject);
-        }
-        //public void ReadANumber(ref int number) { }  //
-        //public void WriteANumber(ref int number) { }
-
-        //public void calculate_total_runs() { totalRunNumber = runNumber + dummyRunNumber; }
+        }        
         public void AddLengthOfRuns(long runLenght) //adds to end of runs last writed position
         {
             lengthOfRuns.Add(runLenght);
@@ -84,10 +80,5 @@ namespace laba1_1
         { 
             lengthOfRuns.RemoveAt(0);
         }
-
-        /*	reading/writing with buffer	*/
-        //public void ReadToBuff(ref int buff, int buffSize) { }
-        //public void WriteFromBuff(ref int buff, int buffSize) { }
-
     }
 }
