@@ -23,10 +23,18 @@ namespace laba1_1
             sortedFileName = Console.ReadLine();
             Console.WriteLine("\n");
 
-            Console.WriteLine("How many MB will be in one run? For large files consider 300MB");
-            double sizeInMB = Convert.ToDouble(Console.ReadLine());
-            const int bytesInOneMB = 1024 * 1024;
-            bytesInOneRun = (int)(sizeInMB * bytesInOneMB);
+            if (new System.IO.FileInfo(unsortedFileName).Length >= 1024 * 1024)
+            { 
+                Console.WriteLine("How many MB will be in one run? For large files consider 300MB");
+                double sizeInMB = Convert.ToDouble(Console.ReadLine());
+                const int bytesInOneMB = 1024 * 1024;
+                bytesInOneRun = (int)(sizeInMB * bytesInOneMB);                
+            }
+            else
+            {
+                Console.WriteLine("How many Bytes will be in one run? Be careful, number of bytes should be : 4");
+                bytesInOneRun = Convert.ToInt32(Console.ReadLine());
+            }
             Console.WriteLine();
 
             Console.WriteLine("Do you want optimized version of polyphase merge sort or polyphase merge sort without optimization? 1 - without optimization, 2 - with optimization");
@@ -48,8 +56,8 @@ namespace laba1_1
 
         public static void displaySortInformation(string unsortedFileName, string sortedFileName, TimeSpan ts, bool isSorted)
         {
-            Console.WriteLine("Unsorted size = " + new System.IO.FileInfo(unsortedFileName).Length + "bytes");
-            Console.WriteLine("Sorted size   = " + new System.IO.FileInfo(sortedFileName).Length + "bytes");
+            Console.WriteLine("Unsorted size = " + new System.IO.FileInfo(unsortedFileName).Length + " bytes");
+            Console.WriteLine("Sorted size   = " + new System.IO.FileInfo(sortedFileName).Length + " bytes");
             if (isSorted)
                 Console.WriteLine("File is sorted");
             else

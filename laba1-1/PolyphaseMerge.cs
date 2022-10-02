@@ -21,10 +21,10 @@ namespace laba1_1
         private List<int> ActualRunsIndexArray;   //stores indices of tapes with real runs that will be merged
         private int level;
         private int finalTapeIndex;
-        private long bytesInOneRun;
+        private long maxBytesInOneRun;
 
 
-        public PolyphaseMerge(int TapesNumber, long maxBytesInOneRun)   /*	Constructor */
+        public PolyphaseMerge(int TapesNumber, long maxBytesInOneRun1)   /*	Constructor */
         {
             N = TapesNumber;
             Tapes = new List<Tape>(new Tape[N]);
@@ -36,12 +36,12 @@ namespace laba1_1
             { TapesIndexArray[i] = i; }
             level = 0;
             finalTapeIndex = 0;
-            bytesInOneRun = maxBytesInOneRun;
+            maxBytesInOneRun = maxBytesInOneRun1;
         }
 
         public void PolyphaseMergeSort(string unsortedFile, string sortedFile, int mode)
         {
-            int runNumber = createRuns(unsortedFile, bytesInOneRun);
+            int runNumber = createRuns(unsortedFile, maxBytesInOneRun);
             DistributeRunNumber(runNumber);
             InitialDistribution();
             Polyphase(mode);
@@ -55,6 +55,7 @@ namespace laba1_1
             long fileSize = new System.IO.FileInfo(filePath).Length;
             int runNumber = (int)(fileSize / bytesInOneRun);
             numberInOneRun = bytesInOneRun / sizeof(int);
+            maxBytesInOneRun = numberInOneRun * sizeof(int);
             return runNumber;            
         } 
         public int createRuns(string filePath, long bytesInOneRun) //divides initial file into runs and sorts every of them
@@ -180,7 +181,7 @@ namespace laba1_1
                         if (mode == 1)
                             mergeRuns();    //mergeing
                         else
-                            mergeRunsOptimized(bytesInOneRun);
+                            mergeRunsOptimized(maxBytesInOneRun);
                         currRuns--;
                     }
                 }
