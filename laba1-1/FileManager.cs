@@ -72,5 +72,37 @@ namespace laba1_1
             binaryWriter.Write(bytesArray); //write merged array
             return bytesArray.Count();
         }
+        public static void copyFile(BinaryReader binaryReader, BinaryWriter binaryWriter, long fileSizeInBytes, long maxNumberOfBytes)
+        {
+            long usedBytes = 0;
+            while(usedBytes != fileSizeInBytes)
+            {
+                byte[] bytesArray = binaryReader.ReadBytes((int)(maxNumberOfBytes));
+                binaryWriter.Write(bytesArray);
+                usedBytes += bytesArray.Length;
+            }            
+        }
+        public static bool renameFile(string oldFileName, ref string newFileName)
+        {
+            try
+            {
+                File.Move(oldFileName, newFileName);
+                return true;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Enter a valid fileName ");
+                newFileName = InputFromUser.getFileName();        
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Something wrong. Enter a valid fileName ");
+                newFileName = InputFromUser.getFileName();
+                return false;
+            }
+        }
     }
 }

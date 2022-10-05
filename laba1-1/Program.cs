@@ -25,7 +25,7 @@ namespace laba1_1 // Note: actual namespace depends on the project name.
 
             PolyphaseMerge p = new PolyphaseMerge(N, bytesInOneRun);
                         
-            p.PolyphaseMergeSort(unsortedFile, sortedFile, mode);
+            p.PolyphaseMergeSort(unsortedFile, ref sortedFile, mode);
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;

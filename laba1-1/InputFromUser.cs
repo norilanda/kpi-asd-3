@@ -19,27 +19,37 @@ namespace laba1_1
             }
             Console.WriteLine("Enter unsorted File Name: ");
             unsortedFileName = Console.ReadLine();
+            while(!File.Exists(unsortedFileName))
+            {
+                Console.WriteLine("\nFile does not exist! Enter a valid file name");
+                unsortedFileName = Console.ReadLine();
+            }
             Console.WriteLine("\nEnter file name for sorted file: ");
             sortedFileName = Console.ReadLine();
             Console.WriteLine("\n");
 
-            if (new System.IO.FileInfo(unsortedFileName).Length >= 1024 * 1024)
+            const int bytesInOneMB = 1024 * 1024;
+            Console.WriteLine("Do you want optimized version of polyphase merge sort or polyphase merge sort without optimization? 1 - without optimization, 2 - with optimization");
+            mode = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine();
+
+            if (new System.IO.FileInfo(unsortedFileName).Length >= 1024 * 1024 && mode == 2)
             { 
                 Console.WriteLine("How many MB will be in one run? For large files consider 300MB");
-                double sizeInMB = Convert.ToDouble(Console.ReadLine());
-                const int bytesInOneMB = 1024 * 1024;
+                double sizeInMB = Convert.ToDouble(Console.ReadLine());                
                 bytesInOneRun = (int)(sizeInMB * bytesInOneMB);                
             }
-            else
+            else if (new System.IO.FileInfo(unsortedFileName).Length < 1024 * 1024 && mode == 2)
             {
                 Console.WriteLine("How many Bytes will be in one run? Be careful, number of bytes should be : 4");
                 bytesInOneRun = Convert.ToInt32(Console.ReadLine());
             }
+            else
+            {
+                bytesInOneRun = (int)(400 * bytesInOneMB);
+            }
             Console.WriteLine();
 
-            Console.WriteLine("Do you want optimized version of polyphase merge sort or polyphase merge sort without optimization? 1 - without optimization, 2 - with optimization");
-            mode = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine();
         }
         public static bool askIfConvertToCsv(string sortedFileName, long maxSizeInBytesToConvert)
         {
@@ -64,6 +74,12 @@ namespace laba1_1
                 Console.WriteLine("File is NOT sorted");
 
             Console.WriteLine("Elapsed Time is {0:00}:{1:00}:{2:00}.{3}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+        }
+
+        public static string getFileName()
+        {
+            string fileName = Console.ReadLine();
+            return fileName;
         }
     }
 }

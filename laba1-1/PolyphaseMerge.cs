@@ -39,15 +39,19 @@ namespace laba1_1
             maxBytesInOneRun = maxBytesInOneRun1;
         }
 
-        public void PolyphaseMergeSort(string unsortedFile, string sortedFile, int mode)
+        public void PolyphaseMergeSort(string unsortedFile, ref string sortedFile, int mode)
         {
-            int runNumber = createRuns(unsortedFile, maxBytesInOneRun);
+            int runNumber;
+            if (mode == 1)
+                runNumber = createRuns(unsortedFile, maxBytesInOneRun);
+            else
+                runNumber = createRunsOptimized(unsortedFile, maxBytesInOneRun);
             DistributeRunNumber(runNumber);
             InitialDistribution();
             Polyphase(mode);
 
             deleteTempFiles();
-            renameFinalFile(sortedFile);
+            renameFinalFile(ref sortedFile);            
         }
 
         public int calculateRunNumber(string filePath, ref long numberInOneRun, long bytesInOneRun)   //calculates total run number and how many numbers will be in each run
@@ -57,8 +61,59 @@ namespace laba1_1
             numberInOneRun = bytesInOneRun / sizeof(int);
             maxBytesInOneRun = numberInOneRun * sizeof(int);
             return runNumber;            
-        } 
+        }
         public int createRuns(string filePath, long bytesInOneRun) //divides initial file into runs and sorts every of them
+        {
+            long numberBytesInOneRun = 0;
+            int runNumber = 0;
+            long totalReadIntNumber = 0;
+            long fileSizeInBytes = new System.IO.FileInfo(filePath).Length;
+            long fileSize = fileSizeInBytes / sizeof(int);
+            const int bytesInOneInt = sizeof(int);
+
+            Tape sortedRunsFile = new Tape(filePath);
+            sortedRunsFile.StartRead();
+            Tapes[N - 1].StartWrite();
+            FileManager.copyFile(sortedRunsFile.binaryReader, Tapes[N - 1].binaryWriter, fileSizeInBytes, bytesInOneRun); //copies file content to Tape[N-1] file
+            sortedRunsFile.binaryReader.Close();
+            Tapes[N - 1].binaryWriter.Close();
+
+            Tapes[N - 1].StartRead();
+            int[] buff = FileManager.readArrayOfInts(Tapes[N-1].binaryReader, bytesInOneRun/ bytesInOneInt);
+            int posInBuff = 0;
+            int prev = Int32.MinValue;
+            while(totalReadIntNumber != fileSize)
+            {
+                int number = buff[posInBuff++];
+                if (number < prev)
+                { 
+                    Tapes[N - 1].AddLengthOfRuns(numberBytesInOneRun);
+                    runNumber++;
+                    numberBytesInOneRun = bytesInOneInt;
+                }
+                else
+                {
+                    numberBytesInOneRun+= bytesInOneInt;
+                }
+                prev = number;
+                totalReadIntNumber++;
+                if(posInBuff == buff.Length)
+                {
+                    if(totalReadIntNumber < fileSize)//
+                        buff = FileManager.readArrayOfInts(Tapes[N-1].binaryReader, bytesInOneRun / bytesInOneInt);
+                    posInBuff = 0;
+                }
+            }
+            if (numberBytesInOneRun>0)
+            {
+                Tapes[N - 1].AddLengthOfRuns(numberBytesInOneRun);
+                runNumber++;
+            }
+            Tapes[N - 1].binaryReader.Close();
+
+            return runNumber;
+        }
+        public int createRunsOptimized(string filePath, long bytesInOneRun) //divides initial file into runs and sorts every of them
         {
             long numberInOneRun = 0;
             int runNumber = calculateRunNumber(filePath, ref numberInOneRun, bytesInOneRun);
@@ -120,8 +175,8 @@ namespace laba1_1
                     j++;
                 }
             }            
-        }   
-      
+        }
+     
         public void InitialDistribution() //reads sorted runs from file and distributes it between Tapes
         {
             Tapes[N - 1].StartRead();
@@ -267,10 +322,15 @@ namespace laba1_1
                     Tapes[i].destroy();
             }
         } 
-        public void renameFinalFile(string newFileName)
-        {
+        public void renameFinalFile(ref string newFileName)
+        {          
             Tapes[finalTapeIndex].closeReaders();
-            File.Move(Tapes[finalTapeIndex].fileName, newFileName);
+            bool isRenamed = false;
+            do
+            {
+                isRenamed = FileManager.renameFile(Tapes[finalTapeIndex].fileName, ref newFileName);
+            }            
+            while (!isRenamed);
         }
 
         public void mergeRunsOptimized(long maxNumberOfBytes)
